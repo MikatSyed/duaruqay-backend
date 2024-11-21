@@ -1,9 +1,8 @@
 // server.js
-import { Server } from 'http';
-import app from './app';
+import app from './app.js';
 
 async function databaseConnection() {
-  const server: Server = app.listen(5000, () => {
+  const server = app.listen(5000, () => {
     console.log(`Server running on port 5000`);
   });
 
@@ -16,7 +15,7 @@ async function databaseConnection() {
     process.exit(1);
   };
 
-  const unexpectedErrorHandler = (error: unknown) => {
+  const unexpectedErrorHandler = (error) => {
     console.log(error);
     exitHandler();
   };

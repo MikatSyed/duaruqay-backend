@@ -1,11 +1,11 @@
 
-import express, { Application, NextFunction, Request, Response } from 'express';
-import globalErrorHandler from './app/middlewares/globalErrorHandler';
-import routes from './app/routes';
+import express from 'express';
+import globalErrorHandler from './app/middlewares/globalErrorHandler.js';
+import routes from './app/routes/index.js';
 
 
 
-const app: Application = express();
+const app = express();
 
 
 
@@ -20,7 +20,7 @@ app.use('/api/v1', routes);
 app.use(globalErrorHandler);
 
 //handle not found
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((req, res, next) => {
   res.status(404).json({
     success: false,
     message: 'Not Found',

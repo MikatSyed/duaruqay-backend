@@ -8,13 +8,13 @@ const dbPromise = open({
 });
 
 // Service methods
-const getSubCategoriesFromDB = async (): Promise<any[]> => {
+const getSubCategoriesFromDB = async () => {
   const db = await dbPromise;
   const categories = await db.all('SELECT * FROM category');
   return categories;
 };
 
-const getSubcategoriesFromDB = async (categoryId: string): Promise<any[]> => {
+const getSubcategoriesFromDB = async (categoryId) => {
   const db = await dbPromise;
   const subcategories = await db.all(
     'SELECT * FROM sub_category WHERE cat_id = ?',
@@ -23,7 +23,7 @@ const getSubcategoriesFromDB = async (categoryId: string): Promise<any[]> => {
   return subcategories;
 };
 
-export const getDuasByCategory = async (categoryId: number): Promise<any[]> => {
+const getDuasByCategory = async (categoryId) => {
   const db = await dbPromise;
 
   // Fetch all duas for the category
@@ -36,12 +36,12 @@ export const getDuasByCategory = async (categoryId: number): Promise<any[]> => {
   );
 
   // Create a map to track if a subcategory has already been added
-  const addedSubcategories = new Set<number>();
+  const addedSubcategories = new Set();
 
   // Add `subcat_name_en` to the first matching `dua`
-  duas.forEach((dua: any) => {
+  duas.forEach((dua) => {
     const matchingSubcategory = subcategories.find(
-      (subcat: any) => subcat.subcat_id === dua.subcat_id
+      (subcat) => subcat.subcat_id === dua.subcat_id
     );
 
     if (matchingSubcategory && !addedSubcategories.has(matchingSubcategory.subcat_id)) {
@@ -54,10 +54,7 @@ export const getDuasByCategory = async (categoryId: number): Promise<any[]> => {
   return duas;
 };
 
-export const getDuasByCategoryAndSubcategory = async (
-  categoryId: number,
-  subcategoryId: number
-): Promise<any[]> => {
+const getDuasByCategoryAndSubcategory = async (categoryId, subcategoryId) => {
   const db = await dbPromise;
   const duas = await db.all(
     'SELECT * FROM dua WHERE cat_id = ? AND subcat_id = ?',
@@ -67,6 +64,7 @@ export const getDuasByCategoryAndSubcategory = async (
   return duas;
 };
 
+// Export the service object
 export const CategoryService = {
   getSubCategoriesFromDB,
   getSubcategoriesFromDB,

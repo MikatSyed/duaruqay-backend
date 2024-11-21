@@ -1,28 +1,24 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 
 
-import ApiError from '../../errors/ApiError';
-import { IGenericErrorMessage } from '../../interfaces/error';
 
-// Import sqlite3
+import ApiError from '../../errors/ApiError.js';
 
-const globalErrorHandler: ErrorRequestHandler = (
-  error:any,
-  req: Request,
-  res: Response,
-  next: NextFunction
+
+
+
+const globalErrorHandler = (
+  error,
+  req,
+  res,
+  next
 ) => {
   let statusCode = 500;
   let message = 'Something went wrong!';
-  let errorMessages: IGenericErrorMessage[] = [];
+  let errorMessages= [];
 
-  // Handling sqlite3 errors
   if (error instanceof Error && error.name === 'SQLITE_ERROR') {
-    // General SQLite error handling
-    statusCode = 400; // Bad Request
+   
+    statusCode = 400; 
     message = `SQLite error: ${error.message}`;
     errorMessages = [
       {
@@ -31,7 +27,7 @@ const globalErrorHandler: ErrorRequestHandler = (
       },
     ];
   } else if (error instanceof ApiError) {
-    // Custom API error handling
+   
     statusCode = error?.statusCode;
     message = error.message;
     errorMessages = error?.message
@@ -43,7 +39,7 @@ const globalErrorHandler: ErrorRequestHandler = (
         ]
       : [];
   } else if (error instanceof Error) {
-    // General JavaScript/Node.js error
+   
     message = error?.message;
     errorMessages = error?.message
       ? [
@@ -55,7 +51,7 @@ const globalErrorHandler: ErrorRequestHandler = (
       : [];
   }
 
-  // Respond with the error
+ 
   res.status(statusCode).json({
     success: false,
     message,
