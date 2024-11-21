@@ -9,7 +9,7 @@ import routes from './app/routes/index.js';
 const app = express();
 
 
-const allowedOrigins =['http://localhost:3000','https://home-crafter.vercel.app']
+const allowedOrigins =['http://localhost:3000','https://duaruqayah.vercel.app']
 
 
 const corsOptions = {
