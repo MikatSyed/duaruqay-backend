@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const config_1 = __importDefault(require("../../config"));
 const ApiError_1 = __importDefault(require("../../errors/ApiError"));
 // Import sqlite3
 const globalErrorHandler = (error, req, res, next) => {
@@ -52,7 +51,7 @@ const globalErrorHandler = (error, req, res, next) => {
         success: false,
         message,
         errorMessages,
-        stack: config_1.default.env !== 'production' ? error === null || error === void 0 ? void 0 : error.stack : undefined,
+        stack: error === null || error === void 0 ? void 0 : error.stack
     });
 };
 exports.default = globalErrorHandler;

@@ -28,7 +28,7 @@ const getSubCategoriesFromDB = () => __awaiter(void 0, void 0, void 0, function*
 });
 const getSubcategoriesFromDB = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield dbPromise;
-    const subcategories = yield db.all('SELECT * FROM  sub_category WHERE cat_id = ?', [categoryId]);
+    const subcategories = yield db.all('SELECT * FROM sub_category WHERE cat_id = ?', [categoryId]);
     return subcategories;
 });
 const getDuasByCategory = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {

@@ -2,8 +2,9 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import ApiError from '../../errors/ApiError';
 
+
+import ApiError from '../../errors/ApiError';
 import { IGenericErrorMessage } from '../../interfaces/error';
 
 // Import sqlite3

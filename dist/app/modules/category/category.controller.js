@@ -13,11 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryController = void 0;
-const catchAsync_1 = __importDefault(require("../../../shared/catchAsync")); // Assuming catchAsync handles async errors
-const sendResponse_1 = __importDefault(require("../../../shared/sendResponse")); // Assuming this sends standardized responses
-const category_service_1 = require("./category.service"); // Importing service methods
-// Fetch all categories from the database
-const getSubCategoriesFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
+const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
+const category_service_1 = require("./category.service");
+const getSubCategoriesFromDB = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield category_service_1.CategoryService.getSubCategoriesFromDB();
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
@@ -26,10 +25,9 @@ const getSubCategoriesFromDB = (0, catchAsync_1.default)((req, res) => __awaiter
         data: result,
     });
 }));
-// Fetch subcategories for a specific category
-const fetchSubcategories = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const fetchSubcategories = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { categoryId } = req.params;
-    const result = yield category_service_1.CategoryService.getSubcategoriesFromDB(categoryId); // Get subcategories from service
+    const result = yield category_service_1.CategoryService.getSubcategoriesFromDB(categoryId);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
@@ -37,19 +35,18 @@ const fetchSubcategories = (0, catchAsync_1.default)((req, res) => __awaiter(voi
         data: result,
     });
 }));
-// Fetch duas for a specific subcategory
-const getDuasByCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getDuasByCategory = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { cat } = req.query;
     const categoryId = parseInt(cat, 10);
     const result = yield category_service_1.CategoryService.getDuasByCategory(categoryId);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
-        message: `Duas for category  fetched successfully`,
+        message: `Duas for category fetched successfully`,
         data: result,
     });
 }));
-const getDuasByCategoryAndSubcategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getDuasByCategoryAndSubcategory = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { cat, subcat } = req.query;
     const categoryId = parseInt(cat, 10);
     const subcategoryId = parseInt(subcat, 10);
@@ -61,11 +58,9 @@ const getDuasByCategoryAndSubcategory = (0, catchAsync_1.default)((req, res) => 
         data: result,
     });
 }));
-// Insert a new category into the database
-// Exporting all controller methods
 exports.CategoryController = {
     getSubCategoriesFromDB,
     fetchSubcategories,
     getDuasByCategory,
-    getDuasByCategoryAndSubcategory
+    getDuasByCategoryAndSubcategory,
 };
