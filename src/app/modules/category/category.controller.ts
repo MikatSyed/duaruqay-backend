@@ -28,6 +28,18 @@ const fetchSubcategories: RequestHandler = catchAsync(async (req, res) => {
 });
 
 // Fetch duas for a specific subcategory
+const getDuasByCategory: RequestHandler = catchAsync(async (req, res) => {
+  const { cat } = req.query;
+  const categoryId = parseInt(cat as string, 10); 
+ 
+  const result = await CategoryService.getDuasByCategory(categoryId); 
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: `Duas for category  fetched successfully`,
+    data: result,
+  });
+});
 const getDuasByCategoryAndSubcategory: RequestHandler = catchAsync(async (req, res) => {
   const { cat, subcat } = req.query;
   const categoryId = parseInt(cat as string, 10); 
@@ -49,7 +61,8 @@ const getDuasByCategoryAndSubcategory: RequestHandler = catchAsync(async (req, r
 
 // Exporting all controller methods
 export const CategoryController = {
-  getSubCategoriesFromDB,  // Fetch categories route
-  fetchSubcategories,  // Fetch subcategories for a category
-  getDuasByCategoryAndSubcategory,  // Fetch duas for a subcategory
-};
+  getSubCategoriesFromDB,  
+  fetchSubcategories,
+  getDuasByCategory,  
+  getDuasByCategoryAndSubcategory
+}

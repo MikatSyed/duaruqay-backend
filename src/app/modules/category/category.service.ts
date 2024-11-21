@@ -10,11 +10,8 @@ const dbPromise = open({
 
 // Service methods
 const getSubCategoriesFromDB = async (): Promise<any[]> => {
-  console.log('Hitted1')
   const db = await dbPromise;
-  console.log('Hitted2')
   const categories = await db.all('SELECT * FROM category');
-  console.log('Hitted3')
   return categories;
 };
 
@@ -29,25 +26,49 @@ const getSubcategoriesFromDB = async (categoryId: string): Promise<any[]> => {
 };
 
 
-export const getDuasByCategoryAndSubcategory = async (categoryId: number, subcategoryId: number): Promise<Dua[]> => {
+export const getDuasByCategory = async (categoryId: number): Promise<any[]> => {
+  const db = await dbPromise;
+
+  // Fetch all duas for the category
+  const duas = await db.all('SELECT * FROM dua WHERE cat_id = ?', [categoryId]);
+
+  // Fetch all subcategories for the category
+  const subcategories = await db.all(
+    'SELECT subcat_id, subcat_name_en FROM sub_category WHERE cat_id = ?',
+    [categoryId]
+  );
+
+  // Create a map to track if a subcategory has already been added
+  const addedSubcategories = new Set<number>();
+
+  // Add `subcat_name_en` to the first matching `dua`
+  duas.forEach((dua) => {
+    const matchingSubcategory = subcategories.find(
+      (subcat) => subcat.subcat_id === dua.subcat_id
+    );
+
+    if (matchingSubcategory && !addedSubcategories.has(matchingSubcategory.subcat_id)) {
+      // Add `subcat_name_en` to the first object with this subcat_id
+      dua.subcat_name_en = matchingSubcategory.subcat_name_en;
+      addedSubcategories.add(matchingSubcategory.subcat_id); // Mark as added
+    }
+  });
+
+  return duas;
+};
+
+
+export const getDuasByCategoryAndSubcategory = async (categoryId: number, subcategoryId: number): Promise<any[]> => {
   const db = await dbPromise;
   const duas = await db.all(
     'SELECT * FROM dua WHERE cat_id = ? AND subcat_id = ?',
     [categoryId, subcategoryId]
   );
-  await db.close();
+ 
   return duas;
 };
 
 
-const insertCategory = async (data: { name: string }): Promise<any> => {
-  const db = await dbPromise;
-  const result = await db.run(
-    'INSERT INTO categories (name) VALUES (?)',
-    [data.name]
-  );
-  return { id: result.lastID, name: data.name };
-};
 
 
 
@@ -55,6 +76,7 @@ const insertCategory = async (data: { name: string }): Promise<any> => {
 export const CategoryService = {
   getSubCategoriesFromDB,
   getSubcategoriesFromDB,
+  getDuasByCategory,
   getDuasByCategoryAndSubcategory,
-  insertCategory,
+
 };

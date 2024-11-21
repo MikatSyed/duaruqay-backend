@@ -5,6 +5,7 @@ import { CategoryController } from './category.controller';
 const router = express.Router();
 
 // Route for getting all categories
+router.get('/duas', CategoryController.getDuasByCategory);
 router.get('/', CategoryController.getSubCategoriesFromDB);
 
 // Route for getting subcategories for a specific category
