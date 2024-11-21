@@ -1,11 +1,10 @@
 // server.js
 import { Server } from 'http';
 import app from './app';
-import config from './config';
 
 async function databaseConnection() {
-  const server: Server = app.listen(config.port, () => {
-    console.log(`Server running on port ${config.port}`);
+  const server: Server = app.listen(5000, () => {
+    console.log(`Server running on port 5000`);
   });
 
   const exitHandler = () => {

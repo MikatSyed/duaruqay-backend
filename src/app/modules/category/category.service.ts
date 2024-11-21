@@ -1,7 +1,6 @@
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 
-
 // Open a SQLite database connection
 const dbPromise = open({
   filename: './dua_main.sqlite', // Path to your SQLite database file
@@ -15,16 +14,14 @@ const getSubCategoriesFromDB = async (): Promise<any[]> => {
   return categories;
 };
 
-
 const getSubcategoriesFromDB = async (categoryId: string): Promise<any[]> => {
   const db = await dbPromise;
   const subcategories = await db.all(
-    'SELECT * FROM  sub_category WHERE cat_id = ?',
+    'SELECT * FROM sub_category WHERE cat_id = ?',
     [categoryId]
   );
   return subcategories;
 };
-
 
 export const getDuasByCategory = async (categoryId: number): Promise<any[]> => {
   const db = await dbPromise;
@@ -42,9 +39,9 @@ export const getDuasByCategory = async (categoryId: number): Promise<any[]> => {
   const addedSubcategories = new Set<number>();
 
   // Add `subcat_name_en` to the first matching `dua`
-  duas.forEach((dua) => {
+  duas.forEach((dua: any) => {
     const matchingSubcategory = subcategories.find(
-      (subcat) => subcat.subcat_id === dua.subcat_id
+      (subcat: any) => subcat.subcat_id === dua.subcat_id
     );
 
     if (matchingSubcategory && !addedSubcategories.has(matchingSubcategory.subcat_id)) {
@@ -57,26 +54,22 @@ export const getDuasByCategory = async (categoryId: number): Promise<any[]> => {
   return duas;
 };
 
-
-export const getDuasByCategoryAndSubcategory = async (categoryId: number, subcategoryId: number): Promise<any[]> => {
+export const getDuasByCategoryAndSubcategory = async (
+  categoryId: number,
+  subcategoryId: number
+): Promise<any[]> => {
   const db = await dbPromise;
   const duas = await db.all(
     'SELECT * FROM dua WHERE cat_id = ? AND subcat_id = ?',
     [categoryId, subcategoryId]
   );
- 
+
   return duas;
 };
-
-
-
-
-
 
 export const CategoryService = {
   getSubCategoriesFromDB,
   getSubcategoriesFromDB,
   getDuasByCategory,
   getDuasByCategoryAndSubcategory,
-
 };

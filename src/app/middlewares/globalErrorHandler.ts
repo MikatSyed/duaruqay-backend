@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
-import config from '../../config';
 import ApiError from '../../errors/ApiError';
 
 import { IGenericErrorMessage } from '../../interfaces/error';
@@ -10,7 +9,7 @@ import { IGenericErrorMessage } from '../../interfaces/error';
 // Import sqlite3
 
 const globalErrorHandler: ErrorRequestHandler = (
-  error,
+  error:any,
   req: Request,
   res: Response,
   next: NextFunction
@@ -60,7 +59,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     success: false,
     message,
     errorMessages,
-    stack: config.env !== 'production' ? error?.stack : undefined,
+    stack:  error?.stack
   });
 };
 
