@@ -9,6 +9,7 @@ const express_1 = __importDefault(require("express"));
 const category_controller_1 = require("./category.controller");
 const router = express_1.default.Router();
 // Route for getting all categories
+router.get('/duas', category_controller_1.CategoryController.getDuasByCategory);
 router.get('/', category_controller_1.CategoryController.getSubCategoriesFromDB);
 // Route for getting subcategories for a specific category
 router.get('/:categoryId/subcategories', category_controller_1.CategoryController.fetchSubcategories);

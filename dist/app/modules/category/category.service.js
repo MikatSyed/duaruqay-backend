@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CategoryService = exports.getDuasByCategoryAndSubcategory = void 0;
+exports.CategoryService = exports.getDuasByCategoryAndSubcategory = exports.getDuasByCategory = void 0;
 const sqlite_1 = require("sqlite");
 const sqlite3_1 = __importDefault(require("sqlite3"));
 // Open a SQLite database connection
@@ -31,20 +31,35 @@ const getSubcategoriesFromDB = (categoryId) => __awaiter(void 0, void 0, void 0,
     const subcategories = yield db.all('SELECT * FROM  sub_category WHERE cat_id = ?', [categoryId]);
     return subcategories;
 });
+const getDuasByCategory = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
+    const db = yield dbPromise;
+    // Fetch all duas for the category
+    const duas = yield db.all('SELECT * FROM dua WHERE cat_id = ?', [categoryId]);
+    // Fetch all subcategories for the category
+    const subcategories = yield db.all('SELECT subcat_id, subcat_name_en FROM sub_category WHERE cat_id = ?', [categoryId]);
+    // Create a map to track if a subcategory has already been added
+    const addedSubcategories = new Set();
+    // Add `subcat_name_en` to the first matching `dua`
+    duas.forEach((dua) => {
+        const matchingSubcategory = subcategories.find((subcat) => subcat.subcat_id === dua.subcat_id);
+        if (matchingSubcategory && !addedSubcategories.has(matchingSubcategory.subcat_id)) {
+            // Add `subcat_name_en` to the first object with this subcat_id
+            dua.subcat_name_en = matchingSubcategory.subcat_name_en;
+            addedSubcategories.add(matchingSubcategory.subcat_id); // Mark as added
+        }
+    });
+    return duas;
+});
+exports.getDuasByCategory = getDuasByCategory;
 const getDuasByCategoryAndSubcategory = (categoryId, subcategoryId) => __awaiter(void 0, void 0, void 0, function* () {
     const db = yield dbPromise;
     const duas = yield db.all('SELECT * FROM dua WHERE cat_id = ? AND subcat_id = ?', [categoryId, subcategoryId]);
     return duas;
 });
 exports.getDuasByCategoryAndSubcategory = getDuasByCategoryAndSubcategory;
-const insertCategory = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const db = yield dbPromise;
-    const result = yield db.run('INSERT INTO categories (name) VALUES (?)', [data.name]);
-    return { id: result.lastID, name: data.name };
-});
 exports.CategoryService = {
     getSubCategoriesFromDB,
     getSubcategoriesFromDB,
+    getDuasByCategory: exports.getDuasByCategory,
     getDuasByCategoryAndSubcategory: exports.getDuasByCategoryAndSubcategory,
-    insertCategory,
 };

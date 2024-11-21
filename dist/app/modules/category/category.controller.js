@@ -38,6 +38,17 @@ const fetchSubcategories = (0, catchAsync_1.default)((req, res) => __awaiter(voi
     });
 }));
 // Fetch duas for a specific subcategory
+const getDuasByCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cat } = req.query;
+    const categoryId = parseInt(cat, 10);
+    const result = yield category_service_1.CategoryService.getDuasByCategory(categoryId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: `Duas for category  fetched successfully`,
+        data: result,
+    });
+}));
 const getDuasByCategoryAndSubcategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { cat, subcat } = req.query;
     const categoryId = parseInt(cat, 10);
@@ -53,7 +64,8 @@ const getDuasByCategoryAndSubcategory = (0, catchAsync_1.default)((req, res) => 
 // Insert a new category into the database
 // Exporting all controller methods
 exports.CategoryController = {
-    getSubCategoriesFromDB, // Fetch categories route
-    fetchSubcategories, // Fetch subcategories for a category
-    getDuasByCategoryAndSubcategory, // Fetch duas for a subcategory
+    getSubCategoriesFromDB,
+    fetchSubcategories,
+    getDuasByCategory,
+    getDuasByCategoryAndSubcategory
 };
