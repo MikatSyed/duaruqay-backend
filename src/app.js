@@ -1,4 +1,5 @@
 
+import cors from 'cors';
 import express from 'express';
 import globalErrorHandler from './app/middlewares/globalErrorHandler.js';
 import routes from './app/routes/index.js';
@@ -8,7 +9,14 @@ import routes from './app/routes/index.js';
 const app = express();
 
 
+const allowedOrigins =['http://localhost:3000','https://home-crafter.vercel.app']
 
+
+const corsOptions = {
+  origin: allowedOrigins,
+};
+
+app.use(cors(corsOptions));
 
 //parser
 app.use(express.json());
